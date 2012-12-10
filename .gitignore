@@ -1,0 +1,5 @@
+.Rproj.user
+.Rhistory
+.RData
+canceR/src/*.dll
+canceR/src/*.o

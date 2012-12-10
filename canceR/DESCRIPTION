@@ -1,0 +1,14 @@
+Package: canceR
+Title: Models of non-myeloid cancers
+Version: 0.1.0
+Date: 2012-12-10
+Author: Tomas Radivoyevitch
+Description: This package contains functions that compute
+             the right hand sides of systems of ODEs that
+             represent non-myeloid cancers.
+Maintainer: Tomas Radivoyevitch <txr24@case.edu>
+Depends: deSolve
+Suggests:  bbmle
+License: GPL-2
+LazyData: yes
+URL: http://epbi-radivot.cwru.edu/canceR.html

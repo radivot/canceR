@@ -1,4 +1,5 @@
 canceR
 ======
 
-An R package housing non-myeloid cancer-relevant dynamical system models
+An R package housing dynamical system models of non-myeloid cancers
+
