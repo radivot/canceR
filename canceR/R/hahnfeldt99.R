@@ -1,4 +1,4 @@
-#'Antiangiogenesis model of Hahnfeldt et al. 1999
+#'Antiangiogenesis model of Hahnfeldt et al. Cancer Research 1999
 #'
 #'This function returns the right hand side of an ordinary differential
 #'equation model of antiangiogenesis and tumor growth that was published by Hahnfeldt et al
