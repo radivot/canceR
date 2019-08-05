@@ -1,6 +1,17 @@
+.Rproj
 .Rproj.user
 .Rhistory
 .RData
+.Rbuildignore
+.DS_Store
+.Rhistory
+.Ruserdata
+.gitignore
+*.html
+*.zip
+*.gz
 canceR/src/*.dll
 canceR/src/*.o
+canceR/src/*.so
+
 
