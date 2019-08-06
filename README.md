@@ -120,5 +120,126 @@ ggsave("~/tmp/smooth.png",width=5,height=4)
 We see that the model provides a decent fit. 
 
 
+The following block simulates the model to 100 days and adds a small amount of noise
+```
+ev1=ev(Trt="Control",ID=1, time=0, cmt=1,amt=0)
+ev2=ev(Trt="Angiostatin",ID=2, time=0,ii=1,addl=100, cmt=3,amt=20)
+ev3=ev(Trt="Endostatin",ID=3, time=0,ii=1,addl=100, cmt=4,amt=20)
+ev4=ev(Trt="Elow",ID=4, time=0,ii=1,addl=100, cmt=4,amt=4)
+ev5a=ev(Trt="A+E",ID=5, time=0,ii=1,addl=100, cmt=3,amt=20)
+ev5b=ev(Trt="A+E",ID=5, time=0,ii=1,addl=100, cmt=4,amt=20)
+(evnt=ev1+ev2+ev3+ev4+ev5a+ev5b)
+(pars=c( lambda1=.192,b=5.85,d=0.00873,eA=0.15,eE=0.66))
+PH=function(pars) {
+  evnt@data=merge(evnt@data,data.frame(t(pars)))
+  (mod <- mod %>% ev(evnt))
+  (out=mod%>%mrgsim(end = 100, delta = 1) )
+  D=as.data.frame(as_tibble(out))
+  D[!duplicated(D[1:2]),]
+}
+D=PH(pars)%>%select(ID,time,V)%>%mutate(Trt=levels(d$Trt)[ID])%>%mutate(Trt=as_factor(Trt))
+head(D)
+sd=2
+D$V=D$V+rnorm(dim(D)[1],sd=sd)
+D%>%ggplot(aes(x=time,y=V))+facet_wrap(Trt~.,scales = "free")+geom_line(size=1)+tc(11)+sbb
+ggsave("~/tmp/simulated.png",width=5,height=4)
+```
 
+![](docs/simulated.png)
+
+
+Fitting  five parameters  to this rich simulated data
+
+```
+library(FME)
+D=D%>%select(time,V)
+PHcost <- function (pars) {
+  out=PH(pars)%>%select(time,V)
+  modCost(model = out, obs = D)
+  return(modCost(model = out, obs = D))
+}
+(Fit <- modFit(f = PHcost, p = 1.3*pars))
+summary(Fit)
+```
+yields
+ 
+ ```
+Parameters:
+        Estimate Std. Error t value Pr(>|t|)    
+lambda1 0.249519   0.114136   2.186  0.02927 *  
+b       7.604534   2.614625   2.908  0.00379 ** 
+d       0.011350   0.002815   4.032 6.39e-05 ***
+eA      0.198256   3.676839   0.054  0.95702    
+eE      0.858470   2.901736   0.296  0.76747  
+ ```
+
+Thus eA and/or eE need to come out.  Taking out eA 
+
+
+ ```
+(pars=c( lambda1=.192,b=5.85,d=0.00873,eE=0.66))
+(Fit <- modFit(f = PHcost, p = 1.3*pars))
+summary(Fit)
+ ```
+
+eE still needs to come out
+
+ ```
+Parameters:
+        Estimate Std. Error t value Pr(>|t|)    
+lambda1 0.185255   0.035020   5.290 1.83e-07 ***
+b       7.527241   1.349718   5.577 4.01e-08 ***
+d       0.011390   0.002543   4.478 9.33e-06 ***
+eE      0.780511   1.380439   0.565    0.572    
+```
+
+
+With both eE and aE out
+
+```
+(pars=c( lambda1=.192,b=5.85,d=0.00873))
+(Fit <- modFit(f = PHcost, p = 1.3*pars))
+summary(Fit)
+```
+
+
+we get estimates that are highly correlated 
+
+```
+Parameters:
+        Estimate Std. Error t value Pr(>|t|)    
+lambda1 0.177819   0.039323   4.522 7.65e-06 ***
+b       8.312668   1.522570   5.460 7.51e-08 ***
+d       0.013108   0.002327   5.633 2.95e-08 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 6197 on 502 degrees of freedom
+
+Parameter correlation:
+        lambda1       b       d
+lambda1  1.0000 -0.8344 -0.8359
+b       -0.8344  1.0000  0.9804
+d       -0.8359  0.9804  1.0000
+```
+
+Testing sensitivity to  a larger (2-fold) deviation in initial conditions
+
+```
+(pars=c( lambda1=.192,b=5.85,d=0.00873))
+(Fit <- modFit(f = PHcost, p = 2*pars))
+summary(Fit)
+```
+
+substantially increases the final estimates of both b and d
+
+```
+Parameters:
+         Estimate Std. Error t value Pr(>|t|)    
+lambda1  0.179702   0.028491   6.307 6.23e-10 ***
+b       17.423794   2.419789   7.201 2.20e-12 ***
+d        0.036325   0.007953   4.568 6.21e-06 ***
+```
+
+The likelihood surface thus has a flat ridge.
 
