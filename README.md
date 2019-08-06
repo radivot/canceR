@@ -98,11 +98,7 @@ ggsave("~/tmp/data.png",width=5,height=4)
 
 ![](docs/data.png)
 which shows that Angiostatin and Endostatin alone at 20mg/kg are static, low doses of 
-Endostatin (4mg/kg) is simimar to controls, and the combination is most effective. 
-
-To add smooth curves of the model fit provided in the paper  
-we need to simulate the model with doses given daily out to 25 days 
-to reach all of the data points. 
+Endostatin (4mg/kg) is simimar to controls, and the combination is most effective. To add smooth curves of the model fit provided in the paper  we need to simulate the model with doses given daily out to 25 days to reach all of the data points. 
 
 ```
 ev1=ev(Trt="Control",ID=1, time=0, cmt=1,amt=0)
