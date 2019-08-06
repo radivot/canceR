@@ -98,7 +98,7 @@ fopt <- function(pars,model) {
 }
 
 plotVK<-function(g) {
-	windows()
+	# windows()
 	par(mfrow=c(2,3))
 	with(g$outC, {plot(time,V,type="l",ylab="Tumor Size (uL)",xlab="Time (days)",main="Control",ylim=c(0,12000));
 				lines(time,K,type="l",col="red")} )
@@ -122,7 +122,7 @@ plotVK<-function(g) {
 
 
 plotg<-function(g) {
-	windows()
+	# windows()
 	par(mfrow=c(2,3))
 	plot.new()
 	with(g$outT, plot(time,g,type="l",ylab="drug (mg/kg)",xlab="Time (days)",main="TNP470 (30mg/kg/2day)"))

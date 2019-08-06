@@ -85,9 +85,10 @@ p0=sapply(p0,log)
 g$optNames<-names(p0)
 g
 
-t0 = Sys.time();  
-opt<-optim(p0,fopt,hessian=TRUE,model=g,control=list(trace=F,maxit=5000))
-difftime(Sys.time(),t0,units="mins")[[1]]
+# t0 = Sys.time();  
+# opt<-optim(p0,fopt,hessian=TRUE,model=g,control=list(trace=F,maxit=5000))
+# difftime(Sys.time(),t0,units="mins")[[1]]
+system.time(opt<-optim(p0,fopt,hessian=TRUE,model=g,control=list(trace=F,maxit=5000))) #38 secs
 
 opar<-opt$par
 Hess=opt$hessian
