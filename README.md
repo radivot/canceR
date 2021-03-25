@@ -7,11 +7,9 @@ To install it use:
 devtools::install_github("radivot/canceR",subdir="canceR")
 ```
 
-There is currently only one model in this package, the dynamic  carrying capacity model of Hahnfeldt et al. 
-
 # Tumor Development under Angiogenic Signaling: A Dynamical Theory of Tumor Growth, Treatment Response, and Postvascular Dormancy
 
-[Hahnfeldt et al  *Cancer Research* **59** 4770-4775 (1999)](https://www.ncbi.nlm.nih.gov/pubmed/10519381) provide a model that includes as  state variables, the tumor volume V, its dynamic carrying capacity K, and the concentrations gA and gE of angiostatin and endostatin. In R their model is 
+The model of [Hahnfeldt et al  *Cancer Research* **59** 4770-4775 (1999)](https://www.ncbi.nlm.nih.gov/pubmed/10519381) includes as dynamic state variables the tumor volume V, its  carrying capacity K, and the concentrations gA and gE of angiostatin and endostatin. In R their model is 
 ```
 library(canceR)
 hahnfeldt99AE<-function(Time, State, Pars) {
@@ -117,10 +115,10 @@ ggsave("~/tmp/smooth.png",width=5,height=4)
 ![](docs/smooth.png)
 
 
-We see that the model provides a decent fit. 
+We see that the model fits the data reasonably well. 
 
 
-The following block simulates the model to 100 days and adds a small amount of noise
+The following code simulates the model to 100 days, adding a small amount of noise
 ```
 ev1=ev(Trt="Control",ID=1, time=0, cmt=1,amt=0)
 ev2=ev(Trt="Angiostatin",ID=2, time=0,ii=1,addl=100, cmt=3,amt=20)
@@ -194,7 +192,7 @@ eE      0.780511   1.380439   0.565    0.572
 ```
 
 
-With both eE and aE out
+With both eA and eE out
 
 ```
 (pars=c( lambda1=.192,b=5.85,d=0.00873))
@@ -223,7 +221,7 @@ b       -0.8344  1.0000  0.9804
 d       -0.8359  0.9804  1.0000
 ```
 
-Testing sensitivity to  a larger (2-fold) deviation in initial conditions
+Consistent with a flat likelihood surface ridge,  a 2-fold increase in initial conditions
 
 ```
 (pars=c( lambda1=.192,b=5.85,d=0.00873))
@@ -231,7 +229,7 @@ Testing sensitivity to  a larger (2-fold) deviation in initial conditions
 summary(Fit)
 ```
 
-substantially increases the final estimates of both b and d
+results in substantially increased final estimates of b and d.
 
 ```
 Parameters:
@@ -240,6 +238,4 @@ lambda1  0.179702   0.028491   6.307 6.23e-10 ***
 b       17.423794   2.419789   7.201 2.20e-12 ***
 d        0.036325   0.007953   4.568 6.21e-06 ***
 ```
-
-The likelihood surface thus has a flat ridge.
 
